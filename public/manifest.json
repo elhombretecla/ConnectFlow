@@ -1,0 +1,6 @@
+{
+  "name": "ConnectFlow",
+  "code": "plugin.js",
+  "description": "Generate visual connectors between objects in Penpot",
+  "permissions": ["content:read", "content:write"]
+}

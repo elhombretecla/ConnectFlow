@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ConnectFlow</title>
+  </head>
+  <body>
+    <div class="plugin-container">
+      <!-- Color and Opacity Section -->
+      <div class="section">
+        <div class="color-opacity-row">
+          <div class="color-picker">
+            <div class="color-swatch" data-color="#FF6FE0"></div>
+            <span class="color-label">FF6FE0</span>
+          </div>
+          <div class="opacity-control">
+            <span class="opacity-icon">%</span>
+            <span class="opacity-value">100</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stroke Settings -->
+      <div class="section">
+        <div class="stroke-row">
+          <div class="stroke-width">
+            <div class="stroke-icon">≡</div>
+            <span class="stroke-value">1</span>
+          </div>
+          <div class="dropdown-group">
+            <select class="dropdown" data-setting="position">
+              <option value="inside">Inside</option>
+              <option value="center">Center</option>
+              <option value="outside">Outside</option>
+            </select>
+            <select class="dropdown" data-setting="style">
+              <option value="solid">Solid</option>
+              <option value="dashed">Dashed</option>
+              <option value="dotted">Dotted</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow Settings -->
+      <div class="section">
+        <div class="arrow-row">
+          <select class="dropdown arrow-start" data-setting="startArrow">
+            <option value="none">None</option>
+            <option value="arrow">Arrow</option>
+            <option value="circle">Circle</option>
+          </select>
+          <div class="arrow-direction">
+            <span class="arrow-icon">→</span>
+          </div>
+          <select class="dropdown arrow-end" data-setting="endArrow">
+            <option value="none">None</option>
+            <option value="arrow">Arrow</option>
+            <option value="circle">Circle</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="section preview-section">
+        <div class="preview-container">
+          <div class="preview-element left">
+            <div class="anchor-point top"></div>
+            <div class="anchor-point right"></div>
+            <div class="anchor-point bottom"></div>
+            <div class="anchor-point left"></div>
+            <span class="preview-text">Select an element</span>
+          </div>
+          <div class="connector-arrow">→</div>
+          <div class="preview-element right">
+            <div class="anchor-point top"></div>
+            <div class="anchor-point right"></div>
+            <div class="anchor-point bottom"></div>
+            <div class="anchor-point left"></div>
+            <span class="preview-text">then another element holding [Shift]</span>
+          </div>
+        </div>
+        <input type="text" class="text-input" placeholder="Add text ..." data-setting="labelText">
+      </div>
+
+      <!-- Controls -->
+      <div class="section controls-section">
+        <label class="checkbox-container">
+          <input type="checkbox" data-setting="drawOnSelection" checked>
+          <span class="checkmark">✓</span>
+          <span class="checkbox-label">Draw on selection</span>
+        </label>
+        <button type="button" class="generate-btn" data-handler="generate-connector">
+          GENERATE
+        </button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
