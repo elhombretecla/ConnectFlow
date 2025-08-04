@@ -24,6 +24,8 @@ interface ConnectorSettings {
   endArrow: string;
   labelText: string;
   drawOnSelection: boolean;
+  startAnchor: string | null;
+  endAnchor: string | null;
 }
 
 interface Point {
@@ -46,6 +48,23 @@ function getAnchorPoints(shape: any): AnchorPoint[] {
     { x: centerX, y: shape.y + shape.height, side: 'bottom' },
     { x: shape.x, y: centerY, side: 'left' }
   ];
+}
+
+// Get specific anchor point by side
+function getAnchorPointBySide(shape: any, side: 'top' | 'right' | 'bottom' | 'left'): AnchorPoint {
+  const centerX = shape.x + shape.width / 2;
+  const centerY = shape.y + shape.height / 2;
+
+  switch (side) {
+    case 'top':
+      return { x: centerX, y: shape.y, side: 'top' };
+    case 'right':
+      return { x: shape.x + shape.width, y: centerY, side: 'right' };
+    case 'bottom':
+      return { x: centerX, y: shape.y + shape.height, side: 'bottom' };
+    case 'left':
+      return { x: shape.x, y: centerY, side: 'left' };
+  }
 }
 
 // Calculate distance between two points
@@ -116,8 +135,52 @@ function generateConnector(settings: ConnectorSettings) {
 
   const [shape1, shape2] = selected;
 
-  // Find optimal anchor points
-  const { start, end } = findClosestAnchorPoints(shape1, shape2);
+  // Use manual anchor selection if available, otherwise find optimal anchor points
+  let start: AnchorPoint;
+  let end: AnchorPoint;
+
+  if (settings.startAnchor && settings.endAnchor) {
+    // Both anchors manually selected
+    start = getAnchorPointBySide(shape1, settings.startAnchor as 'top' | 'right' | 'bottom' | 'left');
+    end = getAnchorPointBySide(shape2, settings.endAnchor as 'top' | 'right' | 'bottom' | 'left');
+    console.log('Using manually selected anchor points:', settings.startAnchor, settings.endAnchor);
+  } else if (settings.startAnchor) {
+    // Only start anchor manually selected
+    start = getAnchorPointBySide(shape1, settings.startAnchor as 'top' | 'right' | 'bottom' | 'left');
+    // Find closest anchor on shape2 to the selected start anchor
+    const anchors2 = getAnchorPoints(shape2);
+    let minDistance = Infinity;
+    end = anchors2[0];
+    for (const anchor2 of anchors2) {
+      const dist = distance(start, anchor2);
+      if (dist < minDistance) {
+        minDistance = dist;
+        end = anchor2;
+      }
+    }
+    console.log('Using manually selected start anchor:', settings.startAnchor, 'and closest end anchor:', end.side);
+  } else if (settings.endAnchor) {
+    // Only end anchor manually selected
+    end = getAnchorPointBySide(shape2, settings.endAnchor as 'top' | 'right' | 'bottom' | 'left');
+    // Find closest anchor on shape1 to the selected end anchor
+    const anchors1 = getAnchorPoints(shape1);
+    let minDistance = Infinity;
+    start = anchors1[0];
+    for (const anchor1 of anchors1) {
+      const dist = distance(anchor1, end);
+      if (dist < minDistance) {
+        minDistance = dist;
+        start = anchor1;
+      }
+    }
+    console.log('Using manually selected end anchor:', settings.endAnchor, 'and closest start anchor:', start.side);
+  } else {
+    // No manual selection, use automatic detection
+    const closestPair = findClosestAnchorPoints(shape1, shape2);
+    start = closestPair.start;
+    end = closestPair.end;
+    console.log('Using automatically detected anchor points:', start.side, end.side);
+  }
 
   // Try creating a path using SVG string (alternative approach)
   try {

@@ -214,32 +214,46 @@ body {
 
 .anchor-point {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   background-color: #888;
   border-radius: 50%;
+  border: 2px solid #1a1a1a;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.anchor-point:hover {
+  background-color: #aaa;
+  transform: scale(1.2);
+}
+
+.anchor-point.selected {
+  background-color: #00D4AA;
+  transform: scale(1.3);
 }
 
 .anchor-point.top {
-  top: -4px;
+  top: -6px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .anchor-point.right {
-  right: -4px;
+  right: -6px;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .anchor-point.bottom {
-  bottom: -4px;
+  bottom: -6px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .anchor-point.left {
-  left: -4px;
+  left: -6px;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -613,4 +627,16 @@ body[data-theme="light"] .input-label {
 
 body[data-theme="light"] .color-area {
   border-color: #ddd;
+}
+
+body[data-theme="light"] .anchor-point {
+  background-color: #999;
+}
+
+body[data-theme="light"] .anchor-point:hover {
+  background-color: #777;
+}
+
+body[data-theme="light"] .anchor-point.selected {
+  background-color: #00D4AA;
 }
