@@ -93,6 +93,7 @@ body {
   border-radius: 8px;
   padding: 12px;
   min-width: 60px;
+  height: 43px;
 }
 
 .stroke-icon {
@@ -150,7 +151,8 @@ body {
   align-items: center;
 }
 
-.arrow-start, .arrow-end {
+.arrow-start,
+.arrow-end {
   flex: 1;
 }
 
@@ -158,7 +160,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #3a3a3a;
   border-radius: 8px;
   padding: 12px;
   min-width: 48px;
@@ -196,12 +197,19 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  max-height: 80px;
 }
 
 .preview-text {
   font-size: 12px;
   color: #aaa;
   line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.preview-text.selected {
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .anchor-point {
@@ -294,7 +302,7 @@ body {
   font-weight: bold;
 }
 
-.checkbox-container input[type="checkbox"]:not(:checked) + .checkmark {
+.checkbox-container input[type="checkbox"]:not(:checked)+.checkmark {
   background-color: #3a3a3a;
   border: 1px solid #555;
   color: transparent;
@@ -361,7 +369,12 @@ body[data-theme="light"] .preview-text {
   color: #666;
 }
 
-body[data-theme="light"] .checkbox-container input[type="checkbox"]:not(:checked) + .checkmark {
+body[data-theme="light"] .preview-text.selected {
+  color: #333;
+  font-weight: 500;
+}
+
+body[data-theme="light"] .checkbox-container input[type="checkbox"]:not(:checked)+.checkmark {
   background-color: #f5f5f5;
   border-color: #ddd;
 }
@@ -441,18 +454,16 @@ body[data-theme="light"] .checkbox-container input[type="checkbox"]:not(:checked
   right: -2px;
   bottom: -2px;
   border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 45deg,
-    #666 45deg,
-    #666 135deg,
-    transparent 135deg,
-    transparent 225deg,
-    #666 225deg,
-    #666 315deg,
-    transparent 315deg
-  );
+  background: conic-gradient(from 0deg,
+      transparent 0deg,
+      transparent 45deg,
+      #666 45deg,
+      #666 135deg,
+      transparent 135deg,
+      transparent 225deg,
+      #666 225deg,
+      #666 315deg,
+      transparent 315deg);
   z-index: -1;
 }
 
@@ -473,16 +484,14 @@ body[data-theme="light"] .checkbox-container input[type="checkbox"]:not(:checked
   width: 100%;
   height: 16px;
   border-radius: 8px;
-  background: linear-gradient(
-    to right,
-    #ff0000 0%,
-    #ffff00 16.66%,
-    #00ff00 33.33%,
-    #00ffff 50%,
-    #0000ff 66.66%,
-    #ff00ff 83.33%,
-    #ff0000 100%
-  );
+  background: linear-gradient(to right,
+      #ff0000 0%,
+      #ffff00 16.66%,
+      #00ff00 33.33%,
+      #00ffff 50%,
+      #0000ff 66.66%,
+      #ff00ff 83.33%,
+      #ff0000 100%);
   position: relative;
   cursor: pointer;
   border: 1px solid #444;
@@ -506,7 +515,7 @@ body[data-theme="light"] .checkbox-container input[type="checkbox"]:not(:checked
   right: 0;
   bottom: 0;
   border-radius: 8px;
-  background-image: 
+  background-image:
     linear-gradient(45deg, #666 25%, transparent 25%),
     linear-gradient(-45deg, #666 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #666 75%),

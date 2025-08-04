@@ -1,5 +1,19 @@
 penpot.ui.open("ConnectFlow", `?theme=${penpot.theme}`, { width: 320, height: 600 });
 
+// Send initial selection state
+setTimeout(() => {
+  const selection = penpot.selection.map(shape => ({
+    name: shape.name,
+    type: shape.type,
+    id: shape.id
+  }));
+  
+  penpot.ui.sendMessage({
+    type: 'selection-update',
+    selection: selection
+  });
+}, 100);
+
 interface ConnectorSettings {
   color: string;
   opacity: number;
@@ -277,6 +291,18 @@ penpot.ui.onMessage<any>((message) => {
 
 // Auto-generate on selection change if enabled
 penpot.on('selectionchange', () => {
+  // Send selection info to UI for preview updates
+  const selection = penpot.selection.map(shape => ({
+    name: shape.name,
+    type: shape.type,
+    id: shape.id
+  }));
+  
+  penpot.ui.sendMessage({
+    type: 'selection-update',
+    selection: selection
+  });
+  
   // This would be implemented if drawOnSelection is enabled
   // For now, we'll keep it manual via the Generate button
 });

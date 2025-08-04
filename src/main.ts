@@ -147,8 +147,43 @@ window.addEventListener("message", (event) => {
   } else if (event.data.type === "notification") {
     // Show notification to user
     showNotification(event.data.message);
+  } else if (event.data.type === "selection-update") {
+    // Update preview elements with selected element names
+    updatePreviewElements(event.data.selection);
   }
 });
+
+// Update preview elements with selected element names
+function updatePreviewElements(selection: any[]) {
+  const leftPreviewText = document.querySelector(".preview-element.left .preview-text") as HTMLElement;
+  const rightPreviewText = document.querySelector(".preview-element.right .preview-text") as HTMLElement;
+  
+  if (!leftPreviewText || !rightPreviewText) return;
+  
+  // Default placeholder texts
+  const defaultLeftText = "Select an element";
+  const defaultRightText = "then another element holding [Shift]";
+  
+  if (selection.length === 0) {
+    // No selection - show placeholders
+    leftPreviewText.textContent = defaultLeftText;
+    leftPreviewText.classList.remove('selected');
+    rightPreviewText.textContent = defaultRightText;
+    rightPreviewText.classList.remove('selected');
+  } else if (selection.length === 1) {
+    // One element selected
+    leftPreviewText.textContent = selection[0].name || "Element 1";
+    leftPreviewText.classList.add('selected');
+    rightPreviewText.textContent = defaultRightText;
+    rightPreviewText.classList.remove('selected');
+  } else if (selection.length >= 2) {
+    // Two or more elements selected
+    leftPreviewText.textContent = selection[0].name || "Element 1";
+    leftPreviewText.classList.add('selected');
+    rightPreviewText.textContent = selection[1].name || "Element 2";
+    rightPreviewText.classList.add('selected');
+  }
+}
 
 // Simple notification system
 function showNotification(message: string) {
