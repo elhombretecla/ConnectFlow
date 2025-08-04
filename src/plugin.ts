@@ -125,6 +125,7 @@ function generateConnector(settings: ConnectorSettings) {
     console.log('SVG string:', svgString);
 
     const connector = penpot.createShapeFromSvg(svgString);
+    let finalConnector: any = connector;
 
     if (connector) {
       console.log('SVG shape created successfully');
@@ -181,14 +182,51 @@ function generateConnector(settings: ConnectorSettings) {
         console.log('Final stroke object:', JSON.stringify(stroke, null, 2));
         pathShape.strokes = [stroke];
 
-        // Position the group correctly
+        // Extract the path from the group using ungroup
+        console.log('Ungrouping SVG to extract path');
+
+        // Position the group correctly first
         connector.x = minX;
         connector.y = minY;
+
+        // Before ungrouping, collect all non-path elements to delete them
+        const elementsToDelete: any[] = [];
+        if (connector.children) {
+          for (const child of connector.children) {
+            if (!penpot.utils.types.isPath(child)) {
+              elementsToDelete.push(child);
+              console.log('Marking for deletion:', child.type);
+            }
+          }
+        }
+
+        // Ungroup the SVG to get individual elements
+        if (penpot.utils.types.isGroup(connector)) {
+          penpot.ungroup(connector);
+          console.log('SVG group ungrouped');
+
+          // Delete the unwanted elements (like base-background)
+          for (const element of elementsToDelete) {
+            try {
+              element.remove();
+              console.log('Deleted element:', element.type);
+            } catch (error) {
+              console.log('Could not delete element:', error);
+            }
+          }
+
+          // Use the path as our final connector
+          finalConnector = pathShape;
+        } else {
+          console.log('Connector is not a group, using as-is');
+          finalConnector = connector;
+        }
       } else {
         console.error('Could not find path shape in SVG group');
+        finalConnector = connector;
       }
 
-      const createdElements: any[] = [connector];
+      const createdElements: any[] = [finalConnector];
 
       // Add text label if specified
       if (settings.labelText.trim()) {
