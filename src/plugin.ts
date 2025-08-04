@@ -347,10 +347,27 @@ penpot.ui.onMessage<any>((message) => {
       generateConnector(message.settings);
       break;
     case 'settings-changed':
-      // Settings updated - could trigger live preview if needed
+      // Update current settings to keep them in sync
+      currentSettings = { ...message.settings };
+      console.log('Settings updated, drawOnSelection:', currentSettings.drawOnSelection);
       break;
   }
 });
+
+// Store current settings to access drawOnSelection
+let currentSettings: ConnectorSettings = {
+  color: "#000000",
+  opacity: 100,
+  strokeWidth: 2,
+  position: "center",
+  style: "solid",
+  startArrow: "none",
+  endArrow: "none",
+  labelText: "",
+  drawOnSelection: false,
+  startAnchor: null,
+  endAnchor: null
+};
 
 // Auto-generate on selection change if enabled
 penpot.on('selectionchange', () => {
@@ -366,8 +383,11 @@ penpot.on('selectionchange', () => {
     selection: selection
   });
   
-  // This would be implemented if drawOnSelection is enabled
-  // For now, we'll keep it manual via the Generate button
+  // Auto-generate connector if drawOnSelection is enabled and we have exactly 2 elements
+  if (currentSettings.drawOnSelection && selection.length === 2) {
+    console.log('Auto-generating connector due to drawOnSelection being enabled');
+    generateConnector(currentSettings);
+  }
 });
 
 // Update the theme in the iframe

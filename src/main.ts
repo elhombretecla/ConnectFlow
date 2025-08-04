@@ -29,7 +29,7 @@ const settings: ConnectorSettings = {
   startArrow: "none",
   endArrow: "none",
   labelText: "",
-  drawOnSelection: true,
+  drawOnSelection: false,
   startAnchor: null,
   endAnchor: null
 };
