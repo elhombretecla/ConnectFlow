@@ -27,7 +27,6 @@ export class ColorPicker {
   private hexInput!: HTMLInputElement;
   private opacityInput!: HTMLInputElement;
   private previewCircle!: HTMLElement;
-  private eyedropperBtn!: HTMLElement;
   
   private currentHSV: HSV = { h: 0, s: 100, v: 100 };
   private currentOpacity: number = 100;
@@ -78,12 +77,6 @@ export class ColorPicker {
     const controlsSection = document.createElement('div');
     controlsSection.className = 'color-controls';
     
-    // Eyedropper button
-    this.eyedropperBtn = document.createElement('button');
-    this.eyedropperBtn.className = 'eyedropper-btn';
-    this.eyedropperBtn.innerHTML = '🎨';
-    this.eyedropperBtn.title = 'Eyedropper';
-    
     // Preview circle
     this.previewCircle = document.createElement('div');
     this.previewCircle.className = 'color-preview-circle';
@@ -115,7 +108,6 @@ export class ColorPicker {
     slidersContainer.appendChild(hueContainer);
     slidersContainer.appendChild(opacityContainer);
     
-    controlsSection.appendChild(this.eyedropperBtn);
     controlsSection.appendChild(this.previewCircle);
     controlsSection.appendChild(slidersContainer);
     
@@ -188,9 +180,6 @@ export class ColorPicker {
     // Input events
     this.hexInput.addEventListener('input', () => this.handleHexInput());
     this.opacityInput.addEventListener('input', () => this.handleOpacityInput());
-    
-    // Eyedropper (if supported)
-    this.eyedropperBtn.addEventListener('click', () => this.handleEyedropper());
   }
 
   private handleColorAreaMouseDown(e: MouseEvent): void {
@@ -275,19 +264,7 @@ export class ColorPicker {
     }
   }
 
-  private async handleEyedropper(): Promise<void> {
-    if ('EyeDropper' in window) {
-      try {
-        const eyeDropper = new (window as any).EyeDropper();
-        const result = await eyeDropper.open();
-        this.currentHSV = this.hexToHSV(result.sRGBHex);
-        this.updateDisplay();
-        this.notifyColorChange();
-      } catch (e) {
-        console.log('Eyedropper cancelled or failed');
-      }
-    }
-  }
+
 
   private drawColorArea(): void {
     const ctx = this.colorAreaCtx;

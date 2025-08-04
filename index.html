@@ -26,18 +26,19 @@
         <div class="stroke-row">
           <div class="stroke-width">
             <div class="stroke-icon">≡</div>
-            <span class="stroke-value">1</span>
+            <input type="number" class="stroke-input" min="1" max="100" value="2" data-setting="strokeWidth">
           </div>
           <div class="dropdown-group">
             <select class="dropdown" data-setting="position">
-              <option value="inside">Inside</option>
-              <option value="center">Center</option>
-              <option value="outside">Outside</option>
+              <option value="inner">Inside</option>
+              <option value="center" selected>Center</option>
+              <option value="outer">Outside</option>
             </select>
             <select class="dropdown" data-setting="style">
-              <option value="solid">Solid</option>
+              <option value="solid" selected>Solid</option>
               <option value="dashed">Dashed</option>
               <option value="dotted">Dotted</option>
+              <option value="mixed">Mixed</option>
             </select>
           </div>
         </div>
@@ -47,17 +48,27 @@
       <div class="section">
         <div class="arrow-row">
           <select class="dropdown arrow-start" data-setting="startArrow">
-            <option value="none">None</option>
-            <option value="arrow">Arrow</option>
-            <option value="circle">Circle</option>
+            <option value="none" selected>None</option>
+            <option value="line-arrow">Arrow</option>
+            <option value="triangle-arrow">Triangle</option>
+            <option value="square-marker">Rect</option>
+            <option value="circle-marker">Circle</option>
+            <option value="diamond-marker">Diamond</option>
+            <option value="round">Rounded</option>
+            <option value="square">Squared</option>
           </select>
           <div class="arrow-direction">
             <span class="arrow-icon">→</span>
           </div>
           <select class="dropdown arrow-end" data-setting="endArrow">
-            <option value="none">None</option>
-            <option value="arrow">Arrow</option>
-            <option value="circle">Circle</option>
+            <option value="none" selected>None</option>
+            <option value="line-arrow">Arrow</option>
+            <option value="triangle-arrow">Triangle</option>
+            <option value="square-marker">Rect</option>
+            <option value="circle-marker">Circle</option>
+            <option value="diamond-marker">Diamond</option>
+            <option value="round">Rounded</option>
+            <option value="square">Squared</option>
           </select>
         </div>
       </div>

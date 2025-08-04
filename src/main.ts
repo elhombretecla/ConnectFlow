@@ -19,10 +19,10 @@ interface ConnectorSettings {
 }
 
 const settings: ConnectorSettings = {
-  color: "#FF6FE0",
+  color: "#000000",
   opacity: 100,
-  strokeWidth: 1,
-  position: "inside",
+  strokeWidth: 2,
+  position: "center",
   style: "solid",
   startArrow: "none",
   endArrow: "none",
@@ -37,6 +37,11 @@ function updateUI() {
   const colorSwatch = document.querySelector(".color-swatch") as HTMLElement;
   const colorLabel = document.querySelector(".color-label") as HTMLElement;
   const opacityValue = document.querySelector(".opacity-value") as HTMLElement;
+  const strokeInput = document.querySelector(".stroke-input") as HTMLInputElement;
+  const positionDropdown = document.querySelector("[data-setting='position']") as HTMLSelectElement;
+  const styleDropdown = document.querySelector("[data-setting='style']") as HTMLSelectElement;
+  const startArrowDropdown = document.querySelector("[data-setting='startArrow']") as HTMLSelectElement;
+  const endArrowDropdown = document.querySelector("[data-setting='endArrow']") as HTMLSelectElement;
   
   if (colorSwatch) {
     colorSwatch.style.backgroundColor = settings.color;
@@ -48,6 +53,30 @@ function updateUI() {
   
   if (opacityValue) {
     opacityValue.textContent = Math.round(settings.opacity).toString();
+  }
+  
+  if (strokeInput) {
+    strokeInput.value = settings.strokeWidth.toString();
+  }
+  
+  if (positionDropdown) {
+    positionDropdown.value = settings.position;
+    console.log('Initialized position dropdown to:', settings.position);
+  }
+  
+  if (styleDropdown) {
+    styleDropdown.value = settings.style;
+    console.log('Initialized style dropdown to:', settings.style);
+  }
+  
+  if (startArrowDropdown) {
+    startArrowDropdown.value = settings.startArrow;
+    console.log('Initialized startArrow dropdown to:', settings.startArrow);
+  }
+  
+  if (endArrowDropdown) {
+    endArrowDropdown.value = settings.endArrow;
+    console.log('Initialized endArrow dropdown to:', settings.endArrow);
   }
 }
 
@@ -79,6 +108,7 @@ document.querySelectorAll(".dropdown").forEach(dropdown => {
     const target = e.target as HTMLSelectElement;
     const setting = target.dataset.setting as keyof ConnectorSettings;
     if (setting) {
+      console.log(`Setting ${setting} to:`, target.value);
       (settings as any)[setting] = target.value;
       parent.postMessage({ type: "settings-changed", settings }, "*");
     }
@@ -89,6 +119,15 @@ document.querySelector(".text-input")?.addEventListener("input", (e) => {
   const target = e.target as HTMLInputElement;
   settings.labelText = target.value;
   parent.postMessage({ type: "settings-changed", settings }, "*");
+});
+
+document.querySelector(".stroke-input")?.addEventListener("input", (e) => {
+  const target = e.target as HTMLInputElement;
+  const value = parseInt(target.value);
+  if (!isNaN(value) && value >= 1 && value <= 100) {
+    settings.strokeWidth = value;
+    parent.postMessage({ type: "settings-changed", settings }, "*");
+  }
 });
 
 document.querySelector("[data-setting='drawOnSelection']")?.addEventListener("change", (e) => {
