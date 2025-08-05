@@ -28,6 +28,7 @@ interface ConnectorSettings {
   startAnchor: string | null;
   endAnchor: string | null;
   connectorType: ConnectorType;
+  offset: number;
 }
 
 interface Point {
@@ -89,6 +90,24 @@ function findClosestAnchorPoints(shape1: any, shape2: any): { start: AnchorPoint
   }
 
   return closestPair;
+}
+
+// Apply offset to anchor point based on its side
+function applyOffsetToAnchorPoint(anchorPoint: AnchorPoint, offsetValue: number): AnchorPoint {
+  const { x, y, side } = anchorPoint;
+
+  switch (side) {
+    case 'top':
+      return { x, y: y - offsetValue, side };
+    case 'bottom':
+      return { x, y: y + offsetValue, side };
+    case 'left':
+      return { x: x - offsetValue, y, side };
+    case 'right':
+      return { x: x + offsetValue, y, side };
+    default:
+      return anchorPoint;
+  }
 }
 
 
@@ -156,6 +175,26 @@ function generateConnector(settings: ConnectorSettings) {
     console.log('Using automatically detected anchor points:', start.side, end.side);
   }
 
+  // Apply offset to anchor points
+  const offsetValue = settings.offset || 0;
+  console.log('Original start point:', start.x, start.y, 'side:', start.side);
+  console.log('Original end point:', end.x, end.y, 'side:', end.side);
+  console.log('Offset value:', offsetValue);
+
+  if (offsetValue > 0) {
+    const originalStart = { ...start };
+    const originalEnd = { ...end };
+
+    start = applyOffsetToAnchorPoint(start, offsetValue);
+    end = applyOffsetToAnchorPoint(end, offsetValue);
+
+    console.log('After offset - start point:', start.x, start.y, 'side:', start.side);
+    console.log('After offset - end point:', end.x, end.y, 'side:', end.side);
+    console.log('Start offset delta:', start.x - originalStart.x, start.y - originalStart.y);
+    console.log('End offset delta:', end.x - originalEnd.x, end.y - originalEnd.y);
+    console.log('Applied offset of', offsetValue, 'pixels to anchor points');
+  }
+
   // Try creating a path using SVG string (alternative approach)
   try {
     console.log('Creating path using SVG approach');
@@ -173,10 +212,14 @@ function generateConnector(settings: ConnectorSettings) {
     console.log('Generated path data:', pathData);
 
     // Create a minimal SVG with proper viewBox to avoid huge dimensions
-    const minX = Math.min(start.x, end.x) - 50;
-    const minY = Math.min(start.y, end.y) - 50;
-    const width = Math.abs(end.x - start.x) + 100;
-    const height = Math.abs(end.y - start.y) + 100;
+    // Add extra padding to account for offset and stroke width
+    const padding = Math.max(50, offsetValue + settings.strokeWidth + 10);
+    const minX = Math.min(start.x, end.x) - padding;
+    const minY = Math.min(start.y, end.y) - padding;
+    const width = Math.abs(end.x - start.x) + (padding * 2);
+    const height = Math.abs(end.y - start.y) + (padding * 2);
+
+    console.log('SVG viewBox:', minX, minY, width, height, 'padding:', padding);
 
     const svgString = `<svg viewBox="${minX} ${minY} ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
       <path d="${pathData}" fill="none" stroke="${settings.color}" stroke-width="${settings.strokeWidth}"/>
@@ -248,6 +291,7 @@ function generateConnector(settings: ConnectorSettings) {
         // Position the group correctly first
         connector.x = minX;
         connector.y = minY;
+        console.log('Positioned connector at:', connector.x, connector.y);
 
         // Before ungrouping, collect all non-path elements to delete them
         const elementsToDelete: any[] = [];
@@ -331,7 +375,8 @@ let currentSettings: ConnectorSettings = {
   drawOnSelection: false,
   startAnchor: null,
   endAnchor: null,
-  connectorType: "direct"
+  connectorType: "direct",
+  offset: 0
 };
 
 // Auto-generate on selection change if enabled

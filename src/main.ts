@@ -19,6 +19,7 @@ interface ConnectorSettings {
   startAnchor: string | null;
   endAnchor: string | null;
   connectorType: ConnectorType;
+  offset: number;
 }
 
 const settings: ConnectorSettings = {
@@ -32,7 +33,8 @@ const settings: ConnectorSettings = {
   drawOnSelection: false,
   startAnchor: null,
   endAnchor: null,
-  connectorType: "direct"
+  connectorType: "direct",
+  offset: 0
 };
 
 let colorPicker: ColorPicker | null = null;
@@ -43,6 +45,7 @@ function updateUI() {
   const colorLabel = document.querySelector(".color-label") as HTMLElement;
   const opacityValue = document.querySelector(".opacity-value") as HTMLElement;
   const strokeInput = document.querySelector(".stroke-input") as HTMLInputElement;
+  const offsetInput = document.querySelector(".offset-input") as HTMLInputElement;
   const styleDropdown = document.querySelector("[data-setting='style']") as HTMLSelectElement;
   const startArrowDropdown = document.querySelector("[data-setting='startArrow']") as HTMLSelectElement;
   const endArrowDropdown = document.querySelector("[data-setting='endArrow']") as HTMLSelectElement;
@@ -62,6 +65,10 @@ function updateUI() {
   
   if (strokeInput) {
     strokeInput.value = settings.strokeWidth.toString();
+  }
+  
+  if (offsetInput) {
+    offsetInput.value = settings.offset.toString();
   }
   
   if (styleDropdown) {
@@ -158,6 +165,49 @@ document.querySelector(".stroke-input")?.addEventListener("input", (e) => {
     const clampedValue = Math.max(1, Math.min(100, value || 1));
     target.value = clampedValue.toString();
     settings.strokeWidth = clampedValue;
+    parent.postMessage({ type: "settings-changed", settings }, "*");
+  }
+});
+
+// Prevenir entrada de caracteres no numéricos en el input de offset
+document.querySelector(".offset-input")?.addEventListener("keydown", (e) => {
+  const key = (e as KeyboardEvent).key;
+  // Permitir: backspace, delete, tab, escape, enter, home, end, left, right, up, down
+  if ([
+    'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End',
+    'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+  ].includes(key)) {
+    return;
+  }
+  // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
+  if ((e as KeyboardEvent).ctrlKey && ['a', 'c', 'v', 'x', 'z'].includes(key.toLowerCase())) {
+    return;
+  }
+  // Bloquear si no es un número
+  if (!/^[0-9]$/.test(key)) {
+    e.preventDefault();
+  }
+});
+
+document.querySelector(".offset-input")?.addEventListener("input", (e) => {
+  const target = e.target as HTMLInputElement;
+  
+  // Remover cualquier carácter que no sea número
+  target.value = target.value.replace(/[^0-9]/g, '');
+  
+  const value = parseInt(target.value);
+  if (!isNaN(value) && value >= 0 && value <= 200) {
+    settings.offset = value;
+    parent.postMessage({ type: "settings-changed", settings }, "*");
+  } else if (target.value === '') {
+    // Si el campo está vacío, usar 0 como valor por defecto
+    settings.offset = 0;
+    parent.postMessage({ type: "settings-changed", settings }, "*");
+  } else {
+    // Si el valor está fuera del rango, ajustarlo
+    const clampedValue = Math.max(0, Math.min(200, value || 0));
+    target.value = clampedValue.toString();
+    settings.offset = clampedValue;
     parent.postMessage({ type: "settings-changed", settings }, "*");
   }
 });

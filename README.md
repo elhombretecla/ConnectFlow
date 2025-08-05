@@ -1,6 +1,6 @@
 # ConnectFlow - Penpot Plugin
 
-ConnectFlow is a Penpot plugin that replicates the core functionality of Figma's "Autoflow" plugin. It enables users to generate, manage, and customize visual connectors between selected objects on the Penpot canvas.
+ConnectFlow is a Penpot plugin for creating, styling, and managing visual connectors between objects. It streamlines the process of building diagrams and user flows directly on the canvas.
 
 ## Features
 
@@ -30,7 +30,7 @@ ConnectFlow is a Penpot plugin that replicates the core functionality of Figma's
 - **Color Swatch**: Click to change connector color (currently set to #FF6FE0)
 - **Opacity**: Adjust transparency (0-100%)
 - **Stroke Width**: Control line thickness
-- **Position**: Inside/Center/Outside stroke positioning
+- **Connections**: Direct/Orthogonal/Curve line connections
 - **Style**: Solid/Dashed/Dotted line styles
 - **Arrows**: Configure start and end arrow markers
 - **Text Input**: Add custom labels to connectors
@@ -44,16 +44,6 @@ ConnectFlow is a Penpot plugin that replicates the core functionality of Figma's
 2. Install dependencies: `npm install`
 3. Start development: `npm run dev`
 4. Build for production: `npm run build`
-
-### Project Structure
-
-```
-src/
-├── plugin.ts    # Main plugin logic (runs in Penpot context)
-├── main.ts      # UI logic (runs in plugin panel)
-├── style.css    # Plugin interface styling
-└── vite-env.d.ts
-```
 
 ### Key Functions
 
@@ -86,14 +76,6 @@ The plugin uses the Penpot Plugin API to:
 1. Build the plugin: `npm run build`
 2. Deploy the `dist` folder to your hosting platform
 3. Use the deployed manifest.json URL in Penpot
-
-## Future Enhancements
-
-- Advanced pathfinding with obstacle avoidance
-- More arrow marker styles
-- Curved connector options
-- Batch connector generation
-- Connector templates and presets
 
 ## License
 
