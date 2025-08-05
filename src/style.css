@@ -1,7 +1,7 @@
 @import "@penpot/plugin-styles/styles.css";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Work Sans", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
@@ -230,6 +230,7 @@ body {
   width: 12px;
   height: 12px;
   background-color: var(--db-quaternary);
+  border: 2px solid var(--db-secondary);
   border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
@@ -339,7 +340,257 @@ body {
   color: var(--df-primary);
 }
 
-/* Theme support - Las variables CSS se adaptan automáticamente al tema */
+.generate-btn {
+  background-color: var(--da-primary);
+  color: var(--db-secondary);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.generate-btn:hover {
+  background-color: var(--da-primary-muted);
+}
+
+.generate-btn:active {
+  background-color: var(--da-primary-muted);
+}
+
+/* Light Theme Support */
+body[data-theme="light"] {
+  background-color: var(--lb-primary);
+  color: var(--lf-primary);
+}
+
+body[data-theme="light"] .plugin-container {
+  background-color: var(--lb-primary);
+}
+
+/* Color and Opacity Section - Light Theme */
+body[data-theme="light"] .color-opacity-row {
+  background-color: var(--lb-tertiary);
+  border: 1px solid var(--ld-tertiary);
+}
+
+body[data-theme="light"] .color-opacity-row:hover {
+  background-color: var(--lb-quaternary);
+}
+
+body[data-theme="light"] .color-swatch {
+  border: 1px solid var(--bd-secondary);
+}
+
+body[data-theme="light"] .color-label {
+  color: var(--lf-primary);
+}
+
+body[data-theme="light"] .opacity-control {
+  color: var(--lf-primary);
+}
+
+/* Stroke Settings - Light Theme */
+body[data-theme="light"] .stroke-width {
+  background-color: var(--lb-tertiary);
+  border: 1px solid var(--bd-tertiary);
+}
+
+body[data-theme="light"] .stroke-width:hover {
+  background-color: var(--lb-quaternary);
+}
+
+body[data-theme="light"] .stroke-icon {
+  color: var(--lf-primary);
+}
+
+body[data-theme="light"] .stroke-input {
+  color: var(--lf-primary);
+}
+
+/* Dropdowns - Light Theme */
+body[data-theme="light"] .dropdown {
+  background-color: var(--lb-tertiary);
+  border: 1px solid var(--ld-tertiary);
+  color: var(--lf-primary);
+}
+
+body[data-theme="light"] .dropdown:hover {
+  background-color: var(--lb-quaternary);
+}
+
+body[data-theme="light"] .dropdown:focus {
+  border-color: var(--ac-primary);
+}
+
+/* Arrow Settings - Light Theme */
+body[data-theme="light"] .arrow-direction {
+  background-color: var(--lb-tertiary);
+  border: 1px solid var(--bd-tertiary);
+}
+
+body[data-theme="light"] .arrow-direction:hover {
+  background-color: var(--lb-quaternary);
+}
+
+body[data-theme="light"] .arrow-icon {
+  color: var(--lf-primary);
+}
+
+/* Preview Section - Light Theme */
+body[data-theme="light"] .preview-section {
+  background-color: var(--lb-secondary);
+  border: 1px solid var(--bd-secondary);
+}
+
+body[data-theme="light"] .preview-element {
+  background-color: var(--lb-tertiary);
+}
+
+body[data-theme="light"] .preview-text {
+  color: var(--lf-secondary);
+}
+
+body[data-theme="light"] .preview-text.selected {
+  color: var(--lf-primary);
+}
+
+body[data-theme="light"] .anchor-point {
+  background-color: var(--df-secondary);
+  border: 2px solid var(--lb-secondary);
+}
+
+body[data-theme="light"] .anchor-point:hover {
+  background-color: var(--lf-secondary);
+}
+
+body[data-theme="light"] .anchor-point.selected {
+  background-color: var(--la-primary);
+}
+
+body[data-theme="light"] .connector-arrow {
+  color: var(--lf-tertiary);
+}
+
+/* Text Input - Light Theme */
+body[data-theme="light"] .text-input {
+  background-color: var(--lb-quaternary);
+  border: 1px solid var(--bd-tertiary);
+  color: var(--df-primary);
+}
+
+body[data-theme="light"] .text-input:focus {
+  border-color: var(--ac-primary);
+}
+
+body[data-theme="light"] .text-input::placeholder {
+  color: var(--lf-tertiary);
+}
+
+/* Controls Section - Light Theme */
+body[data-theme="light"] .checkmark {
+  background-color: var(--la-primary);
+  color: var(--lf-inverse);
+}
+
+body[data-theme="light"] .checkbox-container input[type="checkbox"]:not(:checked)+.checkmark {
+  background-color: var(--lb-quaternary);
+  border: 1px solid var(--bd-tertiary);
+}
+
+body[data-theme="light"] .checkbox-label {
+  color: var(--lf-primary);
+}
+
+body[data-theme="light"] .generate-btn {
+  background-color: var(--la-primary);
+  color: var(--lf-inverse);
+}
+
+body[data-theme="light"] .generate-btn:hover {
+  background-color: var(--la-primary-muted);
+}
+
+body[data-theme="light"] .generate-btn:active {
+  background-color: var(--la-primary-muted);
+}
+
+/* Color Picker - Light Theme */
+body[data-theme="light"] .color-picker-overlay {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+body[data-theme="light"] .color-picker-container {
+  background-color: var(--lb-primary);
+  border: 1px solid var(--bd-secondary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"] .color-area {
+  border: 1px solid var(--bd-secondary);
+}
+
+body[data-theme="light"] .color-area-cursor {
+  border: 2px solid var(--lf-primary);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+body[data-theme="light"] .color-preview-circle {
+  border: 2px solid var(--bd-secondary);
+}
+
+body[data-theme="light"] .color-preview-circle::before {
+  background: conic-gradient(from 0deg,
+      transparent 0deg,
+      transparent 45deg,
+      var(--lf-tertiary) 45deg,
+      var(--lf-tertiary) 135deg,
+      transparent 135deg,
+      transparent 225deg,
+      var(--lf-tertiary) 225deg,
+      var(--lf-tertiary) 315deg,
+      transparent 315deg);
+}
+
+body[data-theme="light"] .hue-slider {
+  border: 1px solid var(--bd-secondary);
+}
+
+body[data-theme="light"] .opacity-slider {
+  border: 1px solid var(--bd-secondary);
+}
+
+body[data-theme="light"] .opacity-slider::before {
+  background-image:
+    linear-gradient(45deg, var(--lf-tertiary) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--lf-tertiary) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--lf-tertiary) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--lf-tertiary) 75%);
+}
+
+body[data-theme="light"] .slider-handle {
+  background-color: var(--lf-primary);
+  border: 2px solid var(--lb-tertiary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"] .hex-input,
+body[data-theme="light"] .opacity-input {
+  background-color: var(--lb-quaternary);
+  border: 1px solid var(--bd-tertiary);
+  color: var(--df-primary);
+}
+
+body[data-theme="light"] .hex-input:focus,
+body[data-theme="light"] .opacity-input:focus {
+  border-color: var(--ac-primary);
+}
+
+body[data-theme="light"] .input-label {
+  color: var(--lf-tertiary);
+}
 
 /* Color Picker Styles */
 .color-picker-overlay {
@@ -539,5 +790,3 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
-/* Light theme support - Las variables CSS se adaptan automáticamente al tema */
