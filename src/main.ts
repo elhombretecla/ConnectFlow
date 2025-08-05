@@ -120,11 +120,44 @@ document.querySelectorAll(".dropdown").forEach(dropdown => {
   });
 });
 
+// Prevenir entrada de caracteres no numéricos en el input de stroke-width
+document.querySelector(".stroke-input")?.addEventListener("keydown", (e) => {
+  const key = (e as KeyboardEvent).key;
+  // Permitir: backspace, delete, tab, escape, enter, home, end, left, right, up, down
+  if ([
+    'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End',
+    'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+  ].includes(key)) {
+    return;
+  }
+  // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
+  if ((e as KeyboardEvent).ctrlKey && ['a', 'c', 'v', 'x', 'z'].includes(key.toLowerCase())) {
+    return;
+  }
+  // Bloquear si no es un número
+  if (!/^[0-9]$/.test(key)) {
+    e.preventDefault();
+  }
+});
+
 document.querySelector(".stroke-input")?.addEventListener("input", (e) => {
   const target = e.target as HTMLInputElement;
+  
+  // Remover cualquier carácter que no sea número
+  target.value = target.value.replace(/[^0-9]/g, '');
+  
   const value = parseInt(target.value);
   if (!isNaN(value) && value >= 1 && value <= 100) {
     settings.strokeWidth = value;
+    parent.postMessage({ type: "settings-changed", settings }, "*");
+  } else if (target.value === '') {
+    // Si el campo está vacío, no actualizar settings pero permitir el estado vacío temporalmente
+    return;
+  } else {
+    // Si el valor está fuera del rango, ajustarlo
+    const clampedValue = Math.max(1, Math.min(100, value || 1));
+    target.value = clampedValue.toString();
+    settings.strokeWidth = clampedValue;
     parent.postMessage({ type: "settings-changed", settings }, "*");
   }
 });

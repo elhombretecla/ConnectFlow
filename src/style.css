@@ -115,11 +115,13 @@ body {
 .stroke-input::-webkit-outer-spin-button,
 .stroke-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 .stroke-input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .dropdown-group {
