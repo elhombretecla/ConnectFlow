@@ -94,42 +94,97 @@ export class ConnectorTypeManager {
 
 
   /**
-   * Modo Curve: Conexión con curva suave tipo "S"
-   * Detecta si la conexión es principalmente horizontal o vertical y ajusta la dirección de salida
+   * Modo Curve: Conexión con curvas suaves
+   * Maneja diferentes tipos de conexiones según los lados de anclaje, usando curvas en lugar de ángulos
    */
   private static generateCurvePath(start: AnchorPoint, end: AnchorPoint): string {
-    const { x: x1, y: y1 } = start;
-    const { x: x2, y: y2 } = end;
+    const { x: x1, y: y1, side: startSide } = start;
+    const { x: x2, y: y2, side: endSide } = end;
 
-    // Calcular la distancia entre puntos
     const deltaX = x2 - x1;
     const deltaY = y2 - y1;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-    // Factor de curvatura basado en la distancia, con un mínimo para curvas muy pequeñas
+    // Factor de curvatura adaptativo
     const minCurveFactor = 30;
     const curveFactor = Math.max(minCurveFactor, Math.min(distance / 3, 120));
 
-    // Determinar si la conexión es principalmente horizontal o vertical
-    const isHorizontalPrimary = Math.abs(deltaX) > Math.abs(deltaY);
+    // Clasificar el tipo de conexión basado en los lados de anclaje
+    const startIsHorizontal = startSide === 'left' || startSide === 'right';
+    const endIsHorizontal = endSide === 'left' || endSide === 'right';
+    const startIsVertical = startSide === 'top' || startSide === 'bottom';
+    const endIsVertical = endSide === 'top' || endSide === 'bottom';
 
-    let c1x: number, c1y: number, c2x: number, c2y: number;
+    if (startIsHorizontal && endIsHorizontal) {
+      // CASO HORIZONTAL: left/right ↔ left/right (curva tipo "S" horizontal)
+      const midX = x1 + deltaX / 2;
 
-    if (isHorizontalPrimary) {
-      // Conexión principalmente horizontal - puntos de control horizontales
-      c1x = x1 + (deltaX >= 0 ? curveFactor : -curveFactor);
-      c1y = y1;
-      c2x = x2 - (deltaX >= 0 ? curveFactor : -curveFactor);
-      c2y = y2;
+      // Puntos de control para crear una curva suave tipo "S"
+      const c1x = x1 + (deltaX >= 0 ? curveFactor : -curveFactor);
+      const c1y = y1;
+      const c2x = midX;
+      const c2y = y1;
+      const c3x = midX;
+      const c3y = y2;
+      const c4x = x2 - (deltaX >= 0 ? curveFactor : -curveFactor);
+      const c4y = y2;
+
+      // Usar múltiples curvas para crear el efecto zigzag suave
+      return `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${midX} ${y1 + (y2 - y1) * 0.5} C ${c3x} ${c3y}, ${c4x} ${c4y}, ${x2} ${y2}`;
+
+    } else if (startIsVertical && endIsVertical) {
+      // CASO VERTICAL: top/bottom ↔ top/bottom (curva tipo "S" vertical)
+      const midY = y1 + deltaY / 2;
+
+      // Puntos de control para crear una curva suave tipo "S"
+      const c1x = x1;
+      const c1y = y1 + (deltaY >= 0 ? curveFactor : -curveFactor);
+      const c2x = x1;
+      const c2y = midY;
+      const c3x = x2;
+      const c3y = midY;
+      const c4x = x2;
+      const c4y = y2 - (deltaY >= 0 ? curveFactor : -curveFactor);
+
+      // Usar múltiples curvas para crear el efecto zigzag suave
+      return `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x1 + (x2 - x1) * 0.5} ${midY} C ${c3x} ${c3y}, ${c4x} ${c4y}, ${x2} ${y2}`;
+
+    } else if (startIsHorizontal && endIsVertical) {
+      // CASO MIXTO: left/right → top/bottom (curva simple con una esquina suave)
+      const c1x = x1 + (deltaX >= 0 ? curveFactor : -curveFactor);
+      const c1y = y1;
+      const c2x = x2;
+      const c2y = y2 - (deltaY >= 0 ? curveFactor : -curveFactor);
+
+      return `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c1y}, ${x2} ${y1 + (y2 - y1) * 0.5} C ${c2x} ${c2y}, ${x2} ${c2y}, ${x2} ${y2}`;
+
+    } else if (startIsVertical && endIsHorizontal) {
+      // CASO MIXTO: top/bottom → left/right (curva simple con una esquina suave)
+      const c1x = x1;
+      const c1y = y1 + (deltaY >= 0 ? curveFactor : -curveFactor);
+      const c2x = x2 - (deltaX >= 0 ? curveFactor : -curveFactor);
+      const c2y = y2;
+
+      return `M ${x1} ${y1} C ${c1x} ${c1y}, ${c1x} ${y2}, ${x1 + (x2 - x1) * 0.5} ${y2} C ${c2x} ${c2y}, ${c2x} ${y2}, ${x2} ${y2}`;
+
     } else {
-      // Conexión principalmente vertical - puntos de control verticales
-      c1x = x1;
-      c1y = y1 + (deltaY >= 0 ? curveFactor : -curveFactor);
-      c2x = x2;
-      c2y = y2 - (deltaY >= 0 ? curveFactor : -curveFactor);
-    }
+      // Fallback: curva simple basada en distancia
+      const isHorizontalPrimary = Math.abs(deltaX) > Math.abs(deltaY);
 
-    return `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`;
+      if (isHorizontalPrimary) {
+        const c1x = x1 + (deltaX >= 0 ? curveFactor : -curveFactor);
+        const c1y = y1;
+        const c2x = x2 - (deltaX >= 0 ? curveFactor : -curveFactor);
+        const c2y = y2;
+        return `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`;
+      } else {
+        const c1x = x1;
+        const c1y = y1 + (deltaY >= 0 ? curveFactor : -curveFactor);
+        const c2x = x2;
+        const c2y = y2 - (deltaY >= 0 ? curveFactor : -curveFactor);
+        return `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`;
+      }
+    }
   }
 
 
