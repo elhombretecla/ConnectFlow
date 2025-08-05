@@ -1,3 +1,5 @@
+import { ConnectorTypeManager, ConnectorType, AnchorPoint } from "./connectorTypes";
+
 penpot.ui.open("ConnectFlow", `?theme=${penpot.theme}`, { width: 320, height: 600 });
 
 // Send initial selection state
@@ -26,15 +28,12 @@ interface ConnectorSettings {
   drawOnSelection: boolean;
   startAnchor: string | null;
   endAnchor: string | null;
+  connectorType: ConnectorType;
 }
 
 interface Point {
   x: number;
   y: number;
-}
-
-interface AnchorPoint extends Point {
-  side: 'top' | 'right' | 'bottom' | 'left';
 }
 
 // Calculate anchor points for a shape
@@ -93,31 +92,7 @@ function findClosestAnchorPoints(shape1: any, shape2: any): { start: AnchorPoint
   return closestPair;
 }
 
-// Create a simple straight line path
-function createStraightPath(start: Point, end: Point): string {
-  return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
-}
 
-// Create an elbow (right-angled) path
-function createElbowPath(start: AnchorPoint, end: AnchorPoint): string {
-  const midX = start.x + (end.x - start.x) / 2;
-  const midY = start.y + (end.y - start.y) / 2;
-
-  // Simple elbow logic - can be enhanced with more sophisticated routing
-  if (start.side === 'right' || start.side === 'left') {
-    return `M ${start.x} ${start.y} L ${midX} ${start.y} L ${midX} ${end.y} L ${end.x} ${end.y}`;
-  } else {
-    return `M ${start.x} ${start.y} L ${start.x} ${midY} L ${end.x} ${midY} L ${end.x} ${end.y}`;
-  }
-}
-
-// Create arrow marker
-function createArrowMarker(settings: ConnectorSettings): string {
-  if (settings.endArrow === 'none') return '';
-
-  // Simple arrow path - this would need to be adapted to Penpot's marker system
-  return 'M 0 0 L 10 5 L 0 10 Z';
-}
 
 // Generate connector between two selected objects
 function generateConnector(settings: ConnectorSettings) {
@@ -187,13 +162,22 @@ function generateConnector(settings: ConnectorSettings) {
     console.log('Creating path using SVG approach');
     console.log('Start point:', start.x, start.y);
     console.log('End point:', end.x, end.y);
+    console.log('Connector type:', settings.connectorType);
+
+    // Generate path data using the connector type manager
+    const pathData = ConnectorTypeManager.generatePath({
+      type: settings.connectorType,
+      startPoint: start,
+      endPoint: end
+    });
+    
+    console.log('Generated path data:', pathData);
 
     // Create a minimal SVG with proper viewBox to avoid huge dimensions
-    const pathData = `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
-    const minX = Math.min(start.x, end.x) - 10;
-    const minY = Math.min(start.y, end.y) - 10;
-    const width = Math.abs(end.x - start.x) + 20;
-    const height = Math.abs(end.y - start.y) + 20;
+    const minX = Math.min(start.x, end.x) - 50;
+    const minY = Math.min(start.y, end.y) - 50;
+    const width = Math.abs(end.x - start.x) + 100;
+    const height = Math.abs(end.y - start.y) + 100;
 
     const svgString = `<svg viewBox="${minX} ${minY} ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
       <path d="${pathData}" fill="none" stroke="${settings.color}" stroke-width="${settings.strokeWidth}"/>
@@ -366,7 +350,8 @@ let currentSettings: ConnectorSettings = {
   labelText: "",
   drawOnSelection: false,
   startAnchor: null,
-  endAnchor: null
+  endAnchor: null,
+  connectorType: "direct"
 };
 
 // Auto-generate on selection change if enabled

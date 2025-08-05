@@ -1,5 +1,6 @@
 import "./style.css";
 import { ColorPicker } from "./colorPicker";
+import { ConnectorType } from "./connectorTypes";
 
 // get the current theme from the URL
 const searchParams = new URLSearchParams(window.location.search);
@@ -18,6 +19,7 @@ interface ConnectorSettings {
   drawOnSelection: boolean;
   startAnchor: string | null;
   endAnchor: string | null;
+  connectorType: ConnectorType;
 }
 
 const settings: ConnectorSettings = {
@@ -31,7 +33,8 @@ const settings: ConnectorSettings = {
   labelText: "",
   drawOnSelection: false,
   startAnchor: null,
-  endAnchor: null
+  endAnchor: null,
+  connectorType: "direct"
 };
 
 let colorPicker: ColorPicker | null = null;
@@ -46,6 +49,7 @@ function updateUI() {
   const styleDropdown = document.querySelector("[data-setting='style']") as HTMLSelectElement;
   const startArrowDropdown = document.querySelector("[data-setting='startArrow']") as HTMLSelectElement;
   const endArrowDropdown = document.querySelector("[data-setting='endArrow']") as HTMLSelectElement;
+  const connectorTypeDropdown = document.querySelector("[data-setting='connectorType']") as HTMLSelectElement;
   
   if (colorSwatch) {
     colorSwatch.style.backgroundColor = settings.color;
@@ -81,6 +85,11 @@ function updateUI() {
   if (endArrowDropdown) {
     endArrowDropdown.value = settings.endArrow;
     console.log('Initialized endArrow dropdown to:', settings.endArrow);
+  }
+  
+  if (connectorTypeDropdown) {
+    connectorTypeDropdown.value = settings.connectorType;
+    console.log('Initialized connectorType dropdown to:', settings.connectorType);
   }
 }
 
