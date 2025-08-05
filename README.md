@@ -2,6 +2,8 @@
 
 ConnectFlow is a Penpot plugin for creating, styling, and managing visual connectors between objects. It streamlines the process of building diagrams and user flows directly on the canvas.
 
+<img width="1497" height="888" alt="cover-plugin" src="https://github.com/user-attachments/assets/df82c50a-3b70-47cf-9c71-7175507cf418" />
+
 ## Features
 
 - **Smart Connector Generation**: Automatically creates connectors between two selected objects
@@ -27,14 +29,14 @@ ConnectFlow is a Penpot plugin for creating, styling, and managing visual connec
 
 ## UI Controls
 
-- **Color Swatch**: Click to change connector color (currently set to #FF6FE0)
+- **Color Swatch**: Click to change connector color
 - **Opacity**: Adjust transparency (0-100%)
 - **Stroke Width**: Control line thickness
 - **Connections**: Direct/Orthogonal/Curve line connections
 - **Style**: Solid/Dashed/Dotted line styles
 - **Arrows**: Configure start and end arrow markers
 - **Text Input**: Add custom labels to connectors
-- **Draw on Selection**: Auto-generate when selecting objects (checkbox)
+- **Draw on Selection**: Auto-generate when selecting objects
 
 ## Development
 
