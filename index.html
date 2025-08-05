@@ -29,10 +29,10 @@
             <input type="number" class="stroke-input" min="1" max="100" value="2" data-setting="strokeWidth">
           </div>
           <div class="dropdown-group">
-            <select class="dropdown" data-setting="position">
-              <option value="inner">Inside</option>
-              <option value="center" selected>Center</option>
-              <option value="outer">Outside</option>
+            <select class="dropdown" data-setting="connectorType">
+              <option value="direct" selected>Direct</option>
+              <option value="orthogonal">Orthogonal</option>
+              <option value="curve">Curve</option>
             </select>
             <select class="dropdown" data-setting="style">
               <option value="solid" selected>Solid</option>
@@ -41,18 +41,6 @@
               <option value="mixed">Mixed</option>
             </select>
           </div>
-        </div>
-      </div>
-
-      <!-- Connector Type Section -->
-      <div class="section">
-        <div class="connector-type-row">
-          <label class="connector-type-label">Tipo de Conector</label>
-          <select class="dropdown connector-type-dropdown" data-setting="connectorType">
-            <option value="direct" selected>Direct</option>
-            <option value="orthogonal">Orthogonal</option>
-            <option value="curve">Curve</option>
-          </select>
         </div>
       </div>
 
@@ -104,7 +92,7 @@
             <span class="preview-text">then another element holding [Shift]</span>
           </div>
         </div>
-        <input type="text" class="text-input" placeholder="Add text ..." data-setting="labelText">
+
       </div>
 
       <!-- Controls -->

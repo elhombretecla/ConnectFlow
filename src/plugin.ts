@@ -9,7 +9,7 @@ setTimeout(() => {
     type: shape.type,
     id: shape.id
   }));
-  
+
   penpot.ui.sendMessage({
     type: 'selection-update',
     selection: selection
@@ -24,7 +24,6 @@ interface ConnectorSettings {
   style: string;
   startArrow: string;
   endArrow: string;
-  labelText: string;
   drawOnSelection: boolean;
   startAnchor: string | null;
   endAnchor: string | null;
@@ -170,7 +169,7 @@ function generateConnector(settings: ConnectorSettings) {
       startPoint: start,
       endPoint: end
     });
-    
+
     console.log('Generated path data:', pathData);
 
     // Create a minimal SVG with proper viewBox to avoid huge dimensions
@@ -289,24 +288,6 @@ function generateConnector(settings: ConnectorSettings) {
 
       const createdElements: any[] = [finalConnector];
 
-      // Add text label if specified
-      if (settings.labelText.trim()) {
-        const midX = start.x + (end.x - start.x) / 2;
-        const midY = start.y + (end.y - start.y) / 2;
-
-        const textLabel = penpot.createText(settings.labelText);
-        if (textLabel) {
-          textLabel.x = midX - 25; // Approximate centering
-          textLabel.y = midY - 10;
-          textLabel.fills = [{
-            fillColor: settings.color,
-            fillOpacity: settings.opacity / 100
-          }];
-
-          createdElements.push(textLabel);
-        }
-      }
-
       // Select the created elements
       penpot.selection = createdElements;
 
@@ -347,7 +328,6 @@ let currentSettings: ConnectorSettings = {
   style: "solid",
   startArrow: "none",
   endArrow: "none",
-  labelText: "",
   drawOnSelection: false,
   startAnchor: null,
   endAnchor: null,
@@ -362,12 +342,12 @@ penpot.on('selectionchange', () => {
     type: shape.type,
     id: shape.id
   }));
-  
+
   penpot.ui.sendMessage({
     type: 'selection-update',
     selection: selection
   });
-  
+
   // Auto-generate connector if drawOnSelection is enabled and we have exactly 2 elements
   if (currentSettings.drawOnSelection && selection.length === 2) {
     console.log('Auto-generating connector due to drawOnSelection being enabled');

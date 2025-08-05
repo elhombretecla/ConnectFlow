@@ -15,7 +15,6 @@ interface ConnectorSettings {
   style: string;
   startArrow: string;
   endArrow: string;
-  labelText: string;
   drawOnSelection: boolean;
   startAnchor: string | null;
   endAnchor: string | null;
@@ -30,7 +29,6 @@ const settings: ConnectorSettings = {
   style: "solid",
   startArrow: "none",
   endArrow: "none",
-  labelText: "",
   drawOnSelection: false,
   startAnchor: null,
   endAnchor: null,
@@ -45,7 +43,6 @@ function updateUI() {
   const colorLabel = document.querySelector(".color-label") as HTMLElement;
   const opacityValue = document.querySelector(".opacity-value") as HTMLElement;
   const strokeInput = document.querySelector(".stroke-input") as HTMLInputElement;
-  const positionDropdown = document.querySelector("[data-setting='position']") as HTMLSelectElement;
   const styleDropdown = document.querySelector("[data-setting='style']") as HTMLSelectElement;
   const startArrowDropdown = document.querySelector("[data-setting='startArrow']") as HTMLSelectElement;
   const endArrowDropdown = document.querySelector("[data-setting='endArrow']") as HTMLSelectElement;
@@ -65,11 +62,6 @@ function updateUI() {
   
   if (strokeInput) {
     strokeInput.value = settings.strokeWidth.toString();
-  }
-  
-  if (positionDropdown) {
-    positionDropdown.value = settings.position;
-    console.log('Initialized position dropdown to:', settings.position);
   }
   
   if (styleDropdown) {
@@ -126,12 +118,6 @@ document.querySelectorAll(".dropdown").forEach(dropdown => {
       parent.postMessage({ type: "settings-changed", settings }, "*");
     }
   });
-});
-
-document.querySelector(".text-input")?.addEventListener("input", (e) => {
-  const target = e.target as HTMLInputElement;
-  settings.labelText = target.value;
-  parent.postMessage({ type: "settings-changed", settings }, "*");
 });
 
 document.querySelector(".stroke-input")?.addEventListener("input", (e) => {
